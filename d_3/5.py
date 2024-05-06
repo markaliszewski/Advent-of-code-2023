@@ -22,7 +22,7 @@ def main():
         if str_start > 0:
             if not (valid_symbols.match(lines[i+1][str_start-1])==None and valid_symbols.match(lines[i][str_start-1])==None):
                 is_part_number = True
-        if str_end < len(lines[i]):
+        if str_end < len(lines[i])-1:
             if not (valid_symbols.match(lines[i+1][str_end])==None and valid_symbols.match(lines[i][str_end])==None):
                 is_part_number = True
             
@@ -42,7 +42,7 @@ def main():
             if str_start > 0:
                 if not (valid_symbols.match(lines[i+1][str_start-1])==None and valid_symbols.match(lines[i][str_start-1])==None and valid_symbols.match(lines[i-1][str_start-1])==None):
                     is_part_number = True
-            if str_end < len(lines[i]):
+            if str_end < len(lines[i])-1:
                 if not (valid_symbols.match(lines[i+1][str_end])==None and valid_symbols.match(lines[i][str_end])==None and valid_symbols.match(lines[i-1][str_end])==None):
                     is_part_number = True
             if is_part_number:
@@ -62,7 +62,7 @@ def main():
         if str_start > 0:
             if not (valid_symbols.match(lines[i][str_start-1])==None and valid_symbols.match(lines[i-1][str_start-1])==None):
                 is_part_number = True
-        if str_end < len(lines[i]):
+        if str_end < len(lines[i])-1:
             if not (valid_symbols.match(lines[i][str_end])==None and valid_symbols.match(lines[i-1][str_end])==None):
                 is_part_number = True
         if is_part_number:
