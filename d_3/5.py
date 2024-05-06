@@ -6,7 +6,7 @@ def main():
     lines = file1.readlines()
 
     
-    valid_symbols = re.compile(r'[^0-9\.]')
+    valid_symbols = re.compile(r'[^0-9a-zA-Z\.]')
     sum = 0
     
     i = 0
@@ -29,7 +29,7 @@ def main():
         if is_part_number:
             sum = sum + str_val
     
-    for i in range(1,(len(lines)-2)):
+    for i in range(1,(len(lines)-1)):
         for numbers_in_line in re.finditer(r'\d+',lines[i]):
             is_part_number = False
             str_start = numbers_in_line.start()
