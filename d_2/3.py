@@ -11,9 +11,9 @@ def main():
         fail = False
         entries = re.split(':|;|,',line)
         for entry in entries:
-            key = ''.join(re.findall(r'[a-zA-Z]*',entry)) 
+            key = re.findall(r'[a-zA-Z]+',entry)
             value = re.findall(r'\d+',entry)
-            match key:
+            match key[0]:
                 case 'Game':
                     id = int(value[0])
                 case 'red':
