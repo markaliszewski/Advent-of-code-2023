@@ -4,30 +4,13 @@ import numpy as np
 def look_for_parts(x,y,numbers_enumeration):
     # function returns all unique digits from x,y neighbourhood in numbers_enumeration
     digit = re.compile(r'[0-9]')
-    
-    if x-1<0:
-        x_0 = 0
-    else:
-        x_0 = x-1
-        
-    if x+1 > numbers_enumeration.shape[1]:
-        x_k = numbers_enumeration.shape[1]
-    else:
-        x_k = x+1
 
-    if y-1<0:
-        y_0 = 0
-    else:
-        y_0 = y-1
-        
-    if y+1 > numbers_enumeration.shape[0]:
-        y_k = numbers_enumeration.shape[0]
-    else:
-        y_k = y+1
+    x_0 = max(x-1,0)
+    x_k = min(x+1,numbers_enumeration.shape[1]) 
+    y_0 = max(y-1,0)
+    y_k = min(y+1,numbers_enumeration.shape[0])  
     
     return np.unique(numbers_enumeration[x_0:x_k+1,y_0:y_k+1])
-
-
 
 
 def main():
@@ -44,8 +27,8 @@ def main():
     part_no_index = 1
     
     # numbers_enumeration and part_nos assignment
-    for i in range(0,(len(lines))):
-        for numbers_in_line in re.finditer(r'\d+',lines[i]):
+    for i,line in enumerate(lines):
+        for numbers_in_line in re.finditer(r'\d+',line):
             x_0 = numbers_in_line.start()
             x_k = numbers_in_line.end()
             part_no = int(numbers_in_line.group())
@@ -59,9 +42,9 @@ def main():
     # The sum of gear ratios - gear ratio is calculated only if there are exactly 2 parts adjacent to '*',
     # i.e. there are exactly 3 unique numbers in the neighbourhood
     sum = 0
-    for i in range(0,len(lines)-1):
-        for j in range(0,len(lines[0])-2):
-            if star.match(lines[i][j]):
+    for i,line in enumerate(lines):
+        for j in range(0,len(line)-2):
+            if star.match(line[j]):
                 part_to_multiply = look_for_parts(i,j,numbers_enumeration)
                 if part_to_multiply.shape[0] == 3:
                     sum = sum + part_nos[part_to_multiply[1]]*part_nos[part_to_multiply[2]]
