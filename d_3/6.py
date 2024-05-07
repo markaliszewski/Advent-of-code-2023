@@ -1,5 +1,8 @@
 import re
 import numpy as np
+from os.path import dirname, join
+
+
 
 def look_for_parts(x,y,numbers_enumeration):
     # function returns all unique digits from x,y neighbourhood in numbers_enumeration
@@ -14,7 +17,10 @@ def look_for_parts(x,y,numbers_enumeration):
 
 
 def main():
-    file1 = open("input.txt", "r")
+    current_dir = dirname(__file__)
+    file_path = join(current_dir, "./input.txt")
+
+    file1 = open(file_path, "r")
     lines = file1.readlines()
     file1.close()
     
