@@ -3,34 +3,14 @@ import numpy as np
 
 def look_for_symbols(x_0,x_k,y,symbols_locations):
     
-    if x_0-1<0:
-        x_0 = 0
-    else:
-        x_0 = x_0-1
-        
-    if x_k > symbols_locations.shape[1]:
-        x_k = symbols_locations.shape[1]
-    else:
-        x_k = x_k
 
-    if y-1<0:
-        y_0 = 0
-    else:
-        y_0 = y-1
+    x_0 = max(x_0-1,0)
+    x_k = min(x_k,symbols_locations.shape[1])
+    y_0 = max(y-1,0)        
+    y_k = min(y+1,symbols_locations.shape[0])
         
-    if y+1 > symbols_locations.shape[0]:
-        y_k = symbols_locations.shape[0]
-    else:
-        y_k = y+1
-        
-    
-    if np.sum(symbols_locations[y_0:y_k+1,x_0:x_k+1]) > 0:
-        is_valid = True
-    else:
-        is_valid = False
-    return is_valid
 
-
+    return np.sum(symbols_locations[y_0:y_k+1,x_0:x_k+1]) > 0
 
 
 def main():
@@ -51,7 +31,6 @@ def main():
     sum = 0
     for i in range(0,(len(lines))):
         for numbers_in_line in re.finditer(r'\d+',lines[i]):
-            is_part_number = False
             x_0 = numbers_in_line.start()
             x_k = numbers_in_line.end()
             part_no = int(numbers_in_line.group())
