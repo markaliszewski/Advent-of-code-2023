@@ -29,8 +29,8 @@ def main():
     
     
     sum = 0
-    for i in range(0,(len(lines))):
-        for numbers_in_line in re.finditer(r'\d+',lines[i]):
+    for i, line in enumerate(lines):
+        for numbers_in_line in re.finditer(r'\d+',line):
             x_0 = numbers_in_line.start()
             x_k = numbers_in_line.end()
             part_no = int(numbers_in_line.group())
