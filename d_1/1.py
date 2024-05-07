@@ -1,8 +1,11 @@
 import re
+from os.path import dirname, join
 
 def main():
-    file1 = open("input.txt", "r")
+    current_dir = dirname(__file__)
+    file_path = join(current_dir, "./input.txt")
 
+    file1 = open(file_path, "r")
     lines = file1.readlines()
     sum = 0
 
@@ -20,4 +23,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
