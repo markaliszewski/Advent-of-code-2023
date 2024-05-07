@@ -1,5 +1,6 @@
 import re
 import numpy as np
+from os.path import dirname, join
 
 def look_for_symbols(x_0,x_k,y,symbols_locations):
     
@@ -14,7 +15,10 @@ def look_for_symbols(x_0,x_k,y,symbols_locations):
 
 
 def main():
-    file1 = open("input.txt", "r")
+    current_dir = dirname(__file__)
+    file_path = join(current_dir, "./input.txt")
+
+    file1 = open(file_path, "r")
     lines = file1.readlines()
     file1.close()
     
