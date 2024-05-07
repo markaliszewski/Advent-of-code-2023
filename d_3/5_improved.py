@@ -1,6 +1,38 @@
 import re
 import numpy as np
 
+def look_for_symbols(x_0,x_k,y,symbols_locations):
+    
+    if x_0-1<0:
+        x_0 = 0
+    else:
+        x_0 = x_0-1
+        
+    if x_k > symbols_locations.shape[1]:
+        x_k = symbols_locations.shape[1]
+    else:
+        x_k = x_k
+
+    if y-1<0:
+        y_0 = 0
+    else:
+        y_0 = y-1
+        
+    if y+1 > symbols_locations.shape[0]:
+        y_k = symbols_locations.shape[0]
+    else:
+        y_k = y+1
+        
+    
+    if np.sum(symbols_locations[y_0:y_k+1,x_0:x_k+1]) > 0:
+        is_valid = True
+    else:
+        is_valid = False
+    return is_valid
+
+
+
+
 def main():
     file1 = open("input.txt", "r")
     lines = file1.readlines()
@@ -15,70 +47,18 @@ def main():
             if valid_symbols.match(lines[i][j]):
                 symbols_locations[i][j] = 1
     
-    np.savetxt('out.txt', symbols_locations, fmt='%d')           
     
-
-#     i = 0
-#     for numbers_in_line in re.finditer(r'\d+',lines[i]):
-#         is_part_number = False
-#         str_start = numbers_in_line.start()
-#         str_end = numbers_in_line.end()
-#         str_val = int(numbers_in_line.group())
-#         
-#         for j in range(str_start,str_end):
-#             if not valid_symbols.match(lines[i+1][j])==None:
-#                 is_part_number = True
-#         if str_start > 0:
-#             if not (valid_symbols.match(lines[i+1][str_start-1])==None and valid_symbols.match(lines[i][str_start-1])==None):
-#                 is_part_number = True
-#         if str_end < len(lines[i])-1:
-#             if not (valid_symbols.match(lines[i+1][str_end])==None and valid_symbols.match(lines[i][str_end])==None):
-#                 is_part_number = True
-#             
-#         if is_part_number:
-#             sum = sum + str_val
-#     
-#     for i in range(1,(len(lines)-1)):
-#         for numbers_in_line in re.finditer(r'\d+',lines[i]):
-#             is_part_number = False
-#             str_start = numbers_in_line.start()
-#             str_end = numbers_in_line.end()
-#             str_val = int(numbers_in_line.group())
-#             
-#             for j in range(str_start,str_end):
-#                 if not (valid_symbols.match(lines[i+1][j])==None and valid_symbols.match(lines[i-1][j])==None):
-#                     is_part_number = True
-#             if str_start > 0:
-#                 if not (valid_symbols.match(lines[i+1][str_start-1])==None and valid_symbols.match(lines[i][str_start-1])==None and valid_symbols.match(lines[i-1][str_start-1])==None):
-#                     is_part_number = True
-#             if str_end < len(lines[i])-1:
-#                 if not (valid_symbols.match(lines[i+1][str_end])==None and valid_symbols.match(lines[i][str_end])==None and valid_symbols.match(lines[i-1][str_end])==None):
-#                     is_part_number = True
-#             if is_part_number:
-#                 sum = sum + str_val
-# 
-#     
-#     i = (len(lines)-1)
-#     for numbers_in_line in re.finditer(r'\d+',lines[i]):
-#         is_part_number = False
-#         str_start = numbers_in_line.start()
-#         str_end = numbers_in_line.end()
-#         str_val = int(numbers_in_line.group())
-#         
-#         for j in range(str_start,str_end):
-#             if not (valid_symbols.match(lines[i-1][j])==None):
-#                 is_part_number = True
-#         if str_start > 0:
-#             if not (valid_symbols.match(lines[i][str_start-1])==None and valid_symbols.match(lines[i-1][str_start-1])==None):
-#                 is_part_number = True
-#         if str_end < len(lines[i])-1:
-#             if not (valid_symbols.match(lines[i][str_end])==None and valid_symbols.match(lines[i-1][str_end])==None):
-#                 is_part_number = True
-#         if is_part_number:
-#             sum = sum + str_val
-#     
-#     print(sum)
+    sum = 0
+    for i in range(0,(len(lines))):
+        for numbers_in_line in re.finditer(r'\d+',lines[i]):
+            is_part_number = False
+            x_0 = numbers_in_line.start()
+            x_k = numbers_in_line.end()
+            part_no = int(numbers_in_line.group())
+            if look_for_symbols(x_0,x_k,i,symbols_locations):
+                sum = sum + part_no
+    print(sum)        
+ 
 
 if __name__ == "__main__":
     main()
-
