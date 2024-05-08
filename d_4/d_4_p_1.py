@@ -13,7 +13,7 @@ def points_of_game(line: str) -> int:
     left_set = list(map(int, re.findall(r'\d+', tmp[1])))
     right_set = list(map(int, re.findall(r'\d+', tmp[2])))
     number_of_hits = len(set(left_set) & set(right_set))
-    a = pow(2,number_of_hits-1)
+    a = pow(2, number_of_hits - 1)
     if a < 1:
         return 0
     return int(a)
