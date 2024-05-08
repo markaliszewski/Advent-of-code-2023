@@ -1,9 +1,10 @@
+
 """Solution of d_1_p_2_task.txt."""
 import re
 from os.path import dirname, join
 
 def is_game_valid(line):
-    "reads  game_id from line and checks validity according to d_1_p_2_task.txt"
+    "reads  game_id from line and checks validity according to d_2_p_1_task.txt"
     entries = re.split(':|;|,',line)
     validity = True
     for entry in entries:
@@ -24,7 +25,7 @@ def is_game_valid(line):
     return validity, game_id
 
 def main():
-    """Prints the sum of IDs of the valid games in input.txt according to d_1_p_2_task.txt."""
+    """Prints the sum of IDs of the valid games in input.txt according to d_2_p_1_task.txt."""
     current_dir = dirname(__file__)
     file_path = join(current_dir, "./input.txt")
 
