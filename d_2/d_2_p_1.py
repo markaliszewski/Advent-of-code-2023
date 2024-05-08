@@ -3,9 +3,19 @@
 import re
 from os.path import dirname, join
 
-def is_game_valid(line):
-    "reads  game_id from line and checks validity according to d_2_p_1_task.txt"
-    entries = re.split(':|;|,',line)
+MAX_RED = 12
+MAX_BLUE = 14
+MAX_GREEN = 13
+
+def is_game_valid(line: str) -> tuple[bool, int]:
+    """
+    reads game_id from line and checks validity according to d_2_p_1_task.txt
+
+    :param line: line to scan
+    :return: [is string valid?, game ID]
+    """
+
+    entries = re.split(r'[:;,]',line)
     validity = True
     for entry in entries:
         key = re.findall(r'[a-zA-Z]+',entry)
@@ -14,18 +24,20 @@ def is_game_valid(line):
             case 'Game':
                 game_id = int(value[0])
             case 'red':
-                if int(value[0])>12:
+                if int(value[0]) > MAX_RED:
                     validity = False
             case 'blue':
-                if int(value[0])>14:
+                if int(value[0]) > MAX_BLUE:
                     validity = False
             case 'green':
-                if int(value[0])>13:
+                if int(value[0]) > MAX_GREEN:
                     validity = False
     return validity, game_id
 
 def main():
-    """Prints the sum of IDs of the valid games in input.txt according to d_2_p_1_task.txt."""
+    """
+    Prints the sum of IDs of the valid games in input.txt according to d_2_p_1_task.txt.
+    """
     current_dir = dirname(__file__)
     file_path = join(current_dir, "./input.txt")
 

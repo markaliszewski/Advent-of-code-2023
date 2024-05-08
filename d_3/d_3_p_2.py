@@ -5,8 +5,15 @@ from os.path import dirname, join
 import numpy as np
 
 
-def look_for_parts(x,y,numbers_enumeration):
-    """Function returns all unique digits from x,y neighbourhood in numbers_enumeration"""
+def look_for_parts(x: int, y: int, numbers_enumeration: np.ndarray) -> list:
+    """
+    Function returns all unique numbers from x, y neighbourhood in numbers_enumeration
+
+    :param x: line number of symbol
+    :param y: index in symbol in line
+    :param numbers_enumeration: array of part_nos indices
+    :return: list of all unique numbers from x, y neighbourhood in numbers_enumeration
+    """
 
     x_0 = max(x-1,0)
     x_k = min(x+1,numbers_enumeration.shape[1])
@@ -15,8 +22,15 @@ def look_for_parts(x,y,numbers_enumeration):
 
     return np.unique(numbers_enumeration[x_0:x_k+1,y_0:y_k+1])
 
-def enumerate_part_numbers(lines, part_nos, numbers_enumeration):
-    """Read part number from lines and assigns numbers_enumeration to each part_no"""
+def enumerate_part_numbers(lines: list, part_nos: np.ndarray,\
+                           numbers_enumeration: np.ndarray) -> None:
+    """
+    Read part number from lines and assigns numbers_enumeration to each part_no
+    
+    :param lines: list of lines to search for gear ratios
+    :param part_nos: part_nos contains part numbers which are assigned to numbers_enumeration
+    :param numbers_enumeration: array of part_nos indices
+    """
     part_no_index = 1
     for i,line in enumerate(lines):
         for numbers_in_line in re.finditer(r'\d+',line):
@@ -28,9 +42,17 @@ def enumerate_part_numbers(lines, part_nos, numbers_enumeration):
             part_no_index = part_no_index + 1
 
 
-def sum_of_parts_gear_ratios(lines, part_nos, numbers_enumeration):
-    """Returns the sum of gear ratios - gear ratio is calculated only if there are exactly 2 parts
-    adjacent to '*', i.e. there are exactly 3 unique numbers in the neighbourhood"""
+def sum_of_parts_gear_ratios(lines: list, part_nos: np.ndarray,\
+                             numbers_enumeration: np.ndarray) -> float:
+    """
+    Returns the sum of gear ratios - gear ratio is calculated only if there are exactly 2 parts
+    adjacent to '*', i.e. there are exactly 3 unique numbers in the neighbourhood
+    
+    :param lines: list of lines to search for gear ratios
+    :param part_nos: part_nos contains part numbers which are assigned to numbers_enumeration
+    :param numbers_enumeration: array of part_nos indices
+    :return: sum of gear ratios
+    """
     star = re.compile(r'[*]')
     local_sum = 0
     for i,line in enumerate(lines):
@@ -42,8 +64,10 @@ def sum_of_parts_gear_ratios(lines, part_nos, numbers_enumeration):
                         part_nos[part_to_multiply[2]]
     return local_sum
 
-def main():
-    """The sum of gear ratios according to d_3_p_2_task.txt."""
+def main() -> None:
+    """
+    The sum of gear ratios according to d_3_p_2_task.txt.
+    """
     current_dir = dirname(__file__)
     file_path = join(current_dir, "./input.txt")
 
@@ -51,15 +75,14 @@ def main():
         lines = file1.readlines()
 
     # each part number have part_no_index assigned which is written in numbers_enumeration array
-    numbers_enumeration = np.zeros((len(lines),len(lines[0])-1), dtype=np.int16)
+    numbers_enumeration = np.zeros((len(lines), len(lines[0])-1), dtype=np.int16)
 
     # part_nos contains part numbers which are assigned to numbers_enumeration. It is large
     # just to make sure that it's not smaller than the maximal possible account of part numbers
-    part_nos = np.zeros((len(lines)*(len(lines[0])-1))+1)
-
+    part_nos = np.zeros((len(lines) * (len(lines[0])-1)) + 1)
 
     # numbers_enumeration and part_nos assignment
-    enumerate_part_numbers(lines,part_nos,numbers_enumeration)
+    enumerate_part_numbers(lines, part_nos, numbers_enumeration)
 
 
     print(sum_of_parts_gear_ratios(lines, part_nos, numbers_enumeration))
