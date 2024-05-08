@@ -1,4 +1,5 @@
-"""Solution of d_2_p_1_task.txt."""
+
+"""Solution of d_1_p_2_task.txt."""
 import re
 from os.path import dirname, join
 
