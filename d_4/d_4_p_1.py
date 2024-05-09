@@ -13,7 +13,7 @@ def points_of_game(line: str) -> int:
     left_set = list(map(int, re.findall(r'\d+', tmp[1])))
     right_set = list(map(int, re.findall(r'\d+', tmp[2])))
     number_of_hits = len(set(left_set) & set(right_set))
-    a = pow(2, number_of_hits - 1)
+    a = 2 ** (number_of_hits-1)
     if a < 1:
         return 0
     return int(a)
@@ -29,9 +29,7 @@ def main() -> None:
     with open(file_path, "r", encoding="UTF-8") as file1:
         lines = file1.readlines()
 
-    sum_of_points = 0
-    for line in lines:
-        sum_of_points += points_of_game(line)
+    sum_of_points = sum(points_of_game(line) for line in lines)
 
     print(sum_of_points)
 
