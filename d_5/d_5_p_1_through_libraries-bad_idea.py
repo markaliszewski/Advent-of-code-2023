@@ -2,17 +2,11 @@
 from os.path import dirname, join
 
 def add_dependency_to_dict(dependency_dict: dict, part_of_file: str) -> None:
-    """
-    xxx
-    """
     for line in part_of_file:
         x, y, z = map(int, line.split(" "))
         dependency_dict.update(dict((y+i,x+i) for i in range(z)))
 
 def track_number(dependency_dict: dict, my_number: int) -> int:
-    """
-    xxx
-    """
     try:
         return dependency_dict[my_number]
     except KeyError:
@@ -22,7 +16,7 @@ def track_number(dependency_dict: dict, my_number: int) -> int:
 
 def main() -> None:
     """
-        xxx
+        Does really work for too large numbers, e.g. provided input.txt
     """
     current_dir = dirname(__file__)
     file_path = join(current_dir, "./input.txt")
