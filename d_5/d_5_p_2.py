@@ -28,75 +28,134 @@ class AlmanacStepmap:
         self.partial_map = sorted(self.partial_map, key=lambda x: x[0])
         self.partial_map_reversed = sorted(self.partial_map_reversed, key=lambda x: x[0])
 
-    def range_backward(self, dest_range: list) -> list:
+    def step_right(self, left_range: list, mapping: list) -> list:
         """
-            devides given range due to mapping demands and transform it into source ranges  
-            :param dest_range: given range
-            :return: mapping from divided range into destination
+            devides given range due to mapping demands and transform it into right ranges
+            :param left_range: given left range
+            :return: mapping from divided left range into right range
         """
-        dest_range_start_point = dest_range[0]
-        dest_range_end_point = dest_range[1]
+        left_range_start_point = left_range[0]
+        left_range_end_point = left_range[1]
 
         # start_points = sorted(list(set(x for row in start_points for x in row)))
         map_for_range = []
-        if self.partial_map[0][0] > dest_range_start_point:
-            if self.partial_map[0][0] <= dest_range_end_point:
-                dest_range = [dest_range_start_point, self.partial_map[0][0] - 1]
-                source_range = [dest_range_start_point, self.partial_map[0][0] - 1]
-                map_for_range.append(dest_range + source_range)
-                dest_range_start_point = dest_range[1] + 1
+        if mapping[0][0] > left_range_start_point:
+            if mapping[0][0] <= left_range_end_point:
+                left_range = [left_range_start_point, mapping[0][0] - 1]
+                right_range = [left_range_start_point, mapping[0][0] - 1]
+                map_for_range.append(left_range + right_range)
+                left_range_start_point = left_range[1] + 1
             else:
-                dest_range = [dest_range_start_point, dest_range_end_point]
-                source_range = [dest_range_start_point, dest_range_end_point]
-                map_for_range.append(dest_range + source_range)
+                left_range = [left_range_start_point, left_range_end_point]
+                right_range = [left_range_start_point, left_range_end_point]
+                map_for_range.append(left_range + right_range)
                 return map_for_range
 
-        for dependency_range in self.partial_map:
+        for dependency_range in mapping:
             shift = dependency_range[2] - dependency_range[0]
-            if  dependency_range[0] <= dest_range_start_point < dependency_range[1]:
-                start_index_map = dest_range_start_point
-                if dest_range_end_point < dependency_range[1]:
-                    end_index_map = dest_range_end_point
+            if  dependency_range[0] <= left_range_start_point < dependency_range[1]:
+                start_index_map = left_range_start_point
+                if left_range_end_point < dependency_range[1]:
+                    end_index_map = left_range_end_point
                 else:
                     end_index_map = dependency_range[1]
-                dest_range = [start_index_map, end_index_map]
-                source_range = [start_index_map + shift, end_index_map + shift]
-                map_for_range.append(dest_range + source_range)
-                dest_range_start_point = dest_range[1] + 1
+                left_range = [start_index_map, end_index_map]
+                right_range = [start_index_map + shift, end_index_map + shift]
+                map_for_range.append(left_range + right_range)
+                left_range_start_point = left_range[1] + 1
 
-        if self.partial_map[-1][1] < dest_range_end_point:
-            dest_range = [dest_range_start_point, dest_range_end_point]
-            source_range = [dest_range_start_point, dest_range_end_point]
-            map_for_range.append(dest_range + source_range)
+        if mapping[-1][1] < left_range_end_point:
+            left_range = [left_range_start_point, left_range_end_point]
+            right_range = [left_range_start_point, left_range_end_point]
+            map_for_range.append(left_range + right_range)
 
         return map_for_range
 
-    def ranges_backward(self, dest_ranges: list) -> list:
+    def steps_right(self, left_ranges: list, mapping: list) -> list:
         """
             Preforms range_backward for multiple ranges
-            :param dest_ranges: multiple destination ranges
+            :param left_ranges: multiple destination ranges
             :return: mapping from divided ranges into source ranges
         """
-        dest_ranges = sorted(dest_ranges, key=lambda x: x[0])
+        left_ranges = sorted(left_ranges, key=lambda x: x[0])
         map_for_ranges = []
-        for dest_range in dest_ranges:
-            map_for_ranges.extend(self.range_backward(dest_range))
+        for left_range in left_ranges:
+            map_for_ranges.extend(self.step_right(left_range,mapping))
         return map_for_ranges
 
 
-
-
-    def unit_range_forward(self, unit_source_range: list) -> list:
+    def ranges_forward(self, source_range: list) -> list:
         """
-            transform unit source range into destination range  
-            :param unit_source_range: source range that can be transform through mapping
-                                    with no need for addictional divisions
+            transform source_range into destination range  
+            :param source_range: source range that can be transform through mapping
             :return: destination range
         """
-        source_range_start_point = unit_source_range[0]
-        source_range_end_point = unit_source_range[1]
+        if any(isinstance(i, list) for i in source_range):
+            destination_ranges = self.steps_right(source_range, self.partial_map_reversed)
+        else:
+            destination_ranges = self.step_right(source_range, self.partial_map_reversed)
 
-        # POZAMIENIAĆ FUNCKJĘ BACKWARD NA FORWARD
+        return [range[2:] for range in destination_ranges]
+
+    def ranges_backward(self, dest_range: list) -> list:
+        """
+            transform destination range into source range  
+            :param dest_range: destiantion range that can be transform through mapping
+            :return: source range
+        """
+        if any(isinstance(i, list) for i in dest_range):
+            source_ranges = self.steps_right(dest_range, self.partial_map)
+        else:
+            source_ranges = self.step_right(dest_range, self.partial_map)
+
+        return [range[2:] for range in source_ranges]
+
+class Almanac:
+    def __init__(self, maps: str):
+        """
+            :param maps: file containing maps
+        """
+        for part_of_file in maps.split("\n\n"):
+            part_of_file = part_of_file.split("\n")
+            match part_of_file[0].strip():
+                case "seed-to-soil map:":
+                    self.s2s = AlmanacStepmap(part_of_file[1:])
+                case "soil-to-fertilizer map:":
+                    self.s2f = AlmanacStepmap(part_of_file[1:])
+                case "fertilizer-to-water map:":
+                    self.f2w = AlmanacStepmap(part_of_file[1:])
+                case "water-to-light map:":
+                    self.w2l = AlmanacStepmap(part_of_file[1:])
+                case "light-to-temperature map:":
+                    self.l2t = AlmanacStepmap(part_of_file[1:])
+                case "temperature-to-humidity map:":
+                    self.t2h = AlmanacStepmap(part_of_file[1:])
+                case "humidity-to-location map:":
+                    self.h2l = AlmanacStepmap(part_of_file[1:])
+                case _:
+                    continue
+    def track_seed_location(self,seeds: list):
+        """
+            track seeds locations through all mappings
+            :param seeds: seeds numbers
+            :return: locations correponding to seeds
+        """
+        # print(seeds)
+        soils = self.s2s.ranges_forward(seeds)
+        # print(soils)
+        ferts = self.s2f.ranges_forward(soils)
+        # print(ferts)
+        waters = self.f2w.ranges_forward(ferts)
+        # print(waters)
+        lights = self.w2l.ranges_forward(waters)
+        # print(lights)
+        temps = self.l2t.ranges_forward(lights)
+        # print(temps)
+        humids = self.t2h.ranges_forward(temps)
+        # print(humids)
+        locs = self.h2l.ranges_forward(humids)
+        # print(locs)
+        return locs
 
 def main() -> None:
     """
@@ -112,28 +171,16 @@ def main() -> None:
         part_of_file = part_of_file.split("\n")
         if part_of_file[0].find("seeds:")>-1:
             seeds_packed = [int(s) for s in part_of_file[0].split() if s.isdigit()]
-        match part_of_file[0].strip():
-            case "seed-to-soil map:":
-                s2s = AlmanacStepmap(part_of_file[1:])
-            case "soil-to-fertilizer map:":
-                s2f = AlmanacStepmap(part_of_file[1:])
-            case "fertilizer-to-water map:":
-                f2w = AlmanacStepmap(part_of_file[1:])
-            case "water-to-light map:":
-                w2l = AlmanacStepmap(part_of_file[1:])
-            case "light-to-temperature map:":
-                l2t = AlmanacStepmap(part_of_file[1:])
-            case "temperature-to-humidity map:":
-                t2h = AlmanacStepmap(part_of_file[1:])
-            case "humidity-to-location map:":
-                h2l = AlmanacStepmap(part_of_file[1:])
-            case _:
-                continue
 
     seeds = []
     for seed, range_length in zip(seeds_packed[0::2], seeds_packed[1::2]):
         seeds.append([seed,seed + range_length-1])
 
-    print(h2l.ranges_backward([[0,68],[69,100]]))
+    input_almanac = Almanac(input_file)
+    seeds_locations = input_almanac.track_seed_location(seeds)
+    min_location = min([min(locs) for locs in seeds_locations])
+    print(min_location)
+
+
 if __name__ == "__main__":
     main()
