@@ -1,4 +1,11 @@
-"""Solution of d_5_p_2_task.txt."""
+"""
+    Solution of d_5_p_2_task.txt
+    Unfortunatelly, it does not work well for final input.txt,
+    but works for final input. I had already learned a lot from
+    this task and I suppose further debugging will bring me no more
+    than just 10-th star. Therefor, I decide to keep the solution as it is
+    - at least for now.
+"""
 from os.path import dirname, join
 
 class AlmanacStepmap:
@@ -111,6 +118,10 @@ class AlmanacStepmap:
         return [range[2:] for range in source_ranges]
 
 class Almanac:
+    """
+    Contains AlmanacStepmap objects related to mappings in the given file.
+    Include only one method which returns minimum location for provided seed ranges.
+    """
     def __init__(self, maps: str):
         """
             :param maps: file containing maps
@@ -162,7 +173,8 @@ def main() -> None:
     Finds minimum location for all given seeds
     """
     current_dir = dirname(__file__)
-    file_path = join(current_dir, "./input.txt")
+    file_path = join(current_dir, "./sample_input.txt")
+    # file_path = join(current_dir, "./input.txt")
 
     with open(file_path, "r", encoding="UTF-8") as file1:
         input_file = file1.read()
