@@ -12,7 +12,7 @@ def points_of_game(line: str) -> int:
     :param line: line to scan
     :return: number of new cards gained from game included in line
     """
-    both_sets_as_strings = re.split(r'[*:*|]', line)
+    both_sets_as_strings = re.split(r'[:|]', line)
     left_set = list(map(int, re.findall(r'\d+', both_sets_as_strings[1])))
     right_set = list(map(int, re.findall(r'\d+', both_sets_as_strings[2])))
     number_of_hits = len(set(left_set) & set(right_set))
